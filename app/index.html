@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cover Coast Studio — GTA-style cover art maker</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="chrome">
+  <div class="brand">
+    <span class="brand-mark">CC</span>
+    <div>
+      <h1>Cover Coast Studio</h1>
+      <p>Turn any photo and a caption into poster cover art — offline, on your machine.</p>
+    </div>
+  </div>
+  <ol class="steps">
+    <li><b>1</b> Pick a photo</li>
+    <li><b>2</b> Choose a layout</li>
+    <li><b>3</b> Write a caption</li>
+    <li><b>4</b> Export a PNG</li>
+  </ol>
+</header>
+
+<main>
+  <section class="preview-column">
+    <div class="preview-wrap">
+      <canvas id="previewCanvas" width="960" height="540"></canvas>
+      <p id="previewHint" class="preview-hint">Click a panel to select it, then drag it to move the photo inside.</p>
+    </div>
+    <div class="size-row chrome" id="sizeRow" role="group" aria-label="Preview size">
+      <span class="row-label">Preview</span>
+      <button type="button" data-size="wide" class="size-btn active">Landscape</button>
+      <button type="button" data-size="square" class="size-btn">Square</button>
+      <button type="button" data-size="tall" class="size-btn">Portrait</button>
+    </div>
+  </section>
+
+  <aside class="controls chrome">
+    <section class="control-block" id="photoBlock">
+      <h2>Photo</h2>
+      <label class="upload-btn" for="photoUpload">Upload your own photo</label>
+      <input type="file" id="photoUpload" accept="image/*" multiple>
+      <div class="sample-row" id="sampleRow">
+        <button type="button" data-photo="pier" class="sample-btn">Pier</button>
+        <button type="button" data-photo="boulevard" class="sample-btn">Boulevard</button>
+      </div>
+      <div class="upload-row" id="uploadRow"></div>
+      <button type="button" id="fillAllBtn" class="ghost-btn">Use this photo in every panel</button>
+      <p class="note">Photos are read on your machine and never uploaded anywhere.</p>
+    </section>
+
+    <section class="control-block" id="layoutBlock">
+      <h2>Layout</h2>
+      <div class="layout-row" id="layoutRow">
+        <button type="button" data-layout="hero" class="layout-btn active">Hero + Trio</button>
+        <button type="button" data-layout="grid" class="layout-btn">Four Panels</button>
+        <button type="button" data-layout="bleed" class="layout-btn">Full Bleed</button>
+        <button type="button" data-layout="strip" class="layout-btn">Triple Strip</button>
+        <button type="button" data-layout="banner" class="layout-btn">Banner + Trio</button>
+      </div>
+    </section>
+
+    <section class="control-block" id="panelBlock">
+      <h2>Selected panel <span id="panelName" class="panel-name">1</span></h2>
+      <label class="slider-label">Zoom <input type="range" id="zoomSlider" min="0.8" max="2.6" step="0.05" value="1"></label>
+      <label class="slider-label">Move left / right <input type="range" id="panXSlider" min="-0.5" max="0.5" step="0.01" value="0"></label>
+      <label class="slider-label">Move up / down <input type="range" id="panYSlider" min="-0.5" max="0.5" step="0.01" value="0"></label>
+    </section>
+
+    <section class="control-block" id="gradeBlock">
+      <h2>Colour grade</h2>
+      <div class="grade-row" id="gradeRow">
+        <button type="button" data-grade="sunset" class="grade-btn active" style="--sw1:#ff9a3c;--sw2:#ff2e63">Sunset</button>
+        <button type="button" data-grade="neon" class="grade-btn" style="--sw1:#ff2ea6;--sw2:#00e5ff">Neon</button>
+        <button type="button" data-grade="palm" class="grade-btn" style="--sw1:#0b3d3a;--sw2:#ff8c42">Palm</button>
+        <button type="button" data-grade="vice" class="grade-btn" style="--sw1:#7b2ff7;--sw2:#f7b32b">Vice</button>
+        <button type="button" data-grade="noir" class="grade-btn" style="--sw1:#222;--sw2:#eee">Noir</button>
+      </div>
+    </section>
+
+    <section class="control-block" id="captionBlock">
+      <h2>Caption</h2>
+      <label class="field-label">Title
+        <input type="text" id="titleInput" value="SUNSET HEIST" maxlength="40">
+      </label>
+      <label class="field-label">Subtitle
+        <input type="text" id="subtitleInput" value="Neon nights" maxlength="60">
+      </label>
+      <div class="colour-row">
+        <label class="field-label">Title colour
+          <select id="titleColour">
+            <option value="#ffffff" selected>White</option>
+            <option value="#ffd23f">Gold</option>
+            <option value="#ff5ea8">Pink</option>
+            <option value="#7ef9ff">Ice blue</option>
+          </select>
+        </label>
+        <label class="field-label">Subtitle colour
+          <select id="subtitleColour">
+            <option value="#ff5ea8" selected>Pink</option>
+            <option value="#ffd23f">Gold</option>
+            <option value="#7ef9ff">Ice blue</option>
+            <option value="#ffffff">White</option>
+          </select>
+        </label>
+      </div>
+    </section>
+
+    <section class="control-block" id="exportBlock">
+      <h2>Export PNG</h2>
+      <div class="export-row" id="exportRow">
+        <button type="button" data-export="wide" class="export-btn">1920 x 1080</button>
+        <button type="button" data-export="square" class="export-btn">1080 x 1080</button>
+        <button type="button" data-export="tall" class="export-btn">1080 x 1350</button>
+      </div>
+      <p id="exportStatus" class="status" aria-live="polite">Ready. Pick a photo, a layout and a caption, then export.</p>
+    </section>
+  </aside>
+</main>
+
+<footer class="chrome">
+  <p>Cover Coast Studio — your photos stay on your machine. All lettering and art in this app is original; it uses no game logos, artwork or fonts.</p>
+</footer>
+
+<script type="module" src="app.js"></script>
+</body>
+</html>
